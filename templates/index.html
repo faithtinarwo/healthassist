@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAssist - AI in Healthcare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>HealthAssist - AI Healthcare Solutions</h1>
+
+        <!-- Disease Prediction Form -->
+        <h2>Predict Disease</h2>
+        <input type="text" id="symptomsInput" placeholder="Enter symptoms">
+        <button id="predictButton">Predict Disease</button>
+        <div id="diseasePredictionResult"></div>
+
+        <!-- Personalized Treatment Form -->
+        <h2>Get Personalized Treatment</h2>
+        <input type="text" id="patientDataInput" placeholder="Enter patient condition">
+        <button id="personalizedButton">Get Treatment Plan</button>
+        <div id="personalizedTreatmentResult"></div>
+
+        <!-- Chatbot -->
+        <h2>Chat with HealthBot</h2>
+        <input type="text" id="userInput" placeholder="Ask me anything">
+        <button id="sendMessageButton">Send</button>
+        <div id="chatbox"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Disease Prediction
+        $('#predictButton').click(function () {
+            var symptoms = $('#symptomsInput').val();
+            $.ajax({
+                url: '/predict',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ "symptoms": symptoms }),
+                success: function (response) {
+                    $('#diseasePredictionResult').text('Predicted Disease: ' + response.prediction);
+                }
+            });
+        });
+
+        // Personalized Medicine
+        $('#personalizedButton').click(function () {
+            var patientData = $('#patientDataInput').val();
+            $.ajax({
+                url: '/personalized_medicine',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ "patient_data": { "condition": patientData } }),
+                success: function (response) {
+                    $('#personalizedTreatmentResult').text('Recommended Treatment: ' + response.treatment_plan);
+                }
+            });
+        });
+
+        // Chatbot Functionality
+        $('#sendMessageButton').click(function () {
+            var userMessage = $('#userInput').val();
+            $.ajax({
+                url: '/chat',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ "message": userMessage }),
+                success: function (response) {
+                    $('#chatbox').append('<div><strong>Bot:</strong> ' + response.reply + '</div>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
